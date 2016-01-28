@@ -1,0 +1,34 @@
+---
+- name: Install Nginx
+  apt: pkg=nginx state=installed
+  register: nginxinstalled
+  notify:
+    - start Nginx
+
+- name: Disable Default Site
+  when: nginxinstalled|success
+  file: dest=/etc/nginx/sites-enabled/default state=absent
+
+- name: Add Icinga nginx Config
+  when: nginxinstalled|success
+  register: icingaconf
+  template: src=icinga.lan.j2 dest=/etc/nginx/sites-available/{{ domain }}.conf owner=root group=root
+
+- name: Enable Icinga nginx Config
+  when: icingaconf|success
+  file: src=/etc/nginx/sites-available/{{ domain }}.conf dest=/etc/nginx/sites-enabled/{{ domain }}.conf state=link
+
+- name: Create Web Root
+  when: nginxinstalled|success
+  register: webrootcreated
+  file: dest=/var/www/{{ domain }}/public mode=775 state=directory owner=www-data group=www-data
+
+- name: Create nginx Logs
+  when: webrootcreated|success
+  file: dest=/var/www/{{ domain }}/logs mode=755 state=directory owner=www-data group=www-data
+
+- name: Web root permissions
+  when: webrootcreated|success
+  file: dest=/var/www/{{ domain }} mode=775 state=directory owner=www-data group=www-data recurse=yes
+  notify:
+    - reload nginx
