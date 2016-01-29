@@ -3,7 +3,7 @@
   apt: pkg=nginx state=installed
   register: nginxinstalled
   notify:
-    - start Nginx
+    - start nginx
 
 - name: Disable Default Site
   when: nginxinstalled|success
