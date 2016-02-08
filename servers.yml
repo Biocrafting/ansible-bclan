@@ -1,0 +1,8 @@
+---
+- hosts: monitoring
+  roles:
+    - monitoring
+
+- hosts: teamspeak
+  roles:
+    - teamspeak

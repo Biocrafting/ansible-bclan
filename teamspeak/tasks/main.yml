@@ -1,0 +1,22 @@
+---
+- name: Add ts3 user
+  action: user name={{ user }} comment="Teamspeak 3 User" shell=/sbin/nologin
+  
+- name: Download and unpack ts3
+  unarchive: src=http://dl.4players.de/ts/releases/{{ release }}/teamspeak3-server_linux_amd64-{{ release }}.tar.bz2 dest=/home/{{ user }} copy=no owner={{ user }}
+  register: ts3pkg
+
+- name: Add ts3 service
+  when: ts3pkg|success
+  register: ts3service
+  template: src=teamspeak3.service.j2 dest=/etc/systemd/system/teamspeak3.service owner=root group=root
+  notify:
+    - reload systemd
+
+- name: Enable ts3 service
+  when: ts3service|success
+  service: name=teamspeak3 enabled=yes
+
+- name: Start ts3
+  when: ts3service|success
+  service: name=teamspeak3 state=started
