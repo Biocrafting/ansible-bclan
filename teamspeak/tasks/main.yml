@@ -19,4 +19,12 @@
 
 - name: Start ts3
   when: ts3service|success
+  register: ts3started
   service: name=teamspeak3 state=started
+
+- name: get serveradmin and token
+  when: ts3started
+  register: ts3login
+  shell: journalctl --no-pager | grep -E "loginname|token"
+
+- debug: msg="{{ ts3login.stdout }}"
