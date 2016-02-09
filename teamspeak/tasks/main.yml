@@ -10,8 +10,9 @@
   when: ts3pkg|success
   register: ts3service
   template: src=teamspeak3.service.j2 dest=/etc/systemd/system/teamspeak3.service owner=root group=root
-  notify:
-    - reload systemd
+
+- name: reload systemd
+  command: systemctl daemon-reload
 
 - name: Enable ts3 service
   when: ts3service|success
@@ -21,10 +22,11 @@
   when: ts3service|success
   register: ts3started
   service: name=teamspeak3 state=started
+- pause: seconds=5
 
 - name: get serveradmin and token
   when: ts3started
   register: ts3login
-  shell: journalctl --no-pager | grep -E "loginname|token"
+  shell: journalctl --no-pager | grep -E -o "password= \"[^ ]+\"|token=[^ ]+"
 
 - debug: msg="{{ ts3login.stdout }}"
