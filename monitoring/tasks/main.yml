@@ -1,34 +1,63 @@
 ---
-- name: Install Nginx
-  apt: pkg=nginx state=installed
-  register: nginxinstalled
+- name: Add Debmon repo
+  apt_repository: repo='deb http://debmon.org/debmon debmon-jessie main' state=present
+  apt_key: url=http://debmon.org/debmon/repo.key state=present
+  register: aptrepo
+
+- name: Install icinga2,nginx,php5-fpm,mariadb
+  when: aptrepo|success
+  apt: name={{ item }} state=installed update_cache=yes install_recommends=no
+  with_items:
+    - icinga2
+    - nginx
+    - php5-fpm
+    - mariadb-server
+    - mariadb-client
+  register: apt
   notify:
     - start nginx
 
 - name: Disable Default Site
-  when: nginxinstalled|success
+  when: apt|success
   file: dest=/etc/nginx/sites-enabled/default state=absent
 
-- name: Add Icinga nginx Config
-  when: nginxinstalled|success
+- name: Add nginx Config
+  when: apt|success
   register: icingaconf
-  template: src=icinga.lan.j2 dest=/etc/nginx/sites-available/{{ domain }}.conf owner=root group=root
+  template: src=icinga.j2 dest=/etc/nginx/sites-available/{{ domain_iw }}.conf owner=root group=root
+  template: src=librenms.j2 dest=/etc/nginx/sites-available/{{ domain_iw }}.conf owner=root group=root
 
-- name: Enable Icinga nginx Config
+- name: Enable nginx Configs
   when: icingaconf|success
-  file: src=/etc/nginx/sites-available/{{ domain }}.conf dest=/etc/nginx/sites-enabled/{{ domain }}.conf state=link
+  file: src=/etc/nginx/sites-available/{{ domain_iw }}.conf dest=/etc/nginx/sites-enabled/{{ domain_iw }}.conf state=link
+  file: src=/etc/nginx/sites-available/{{ domain_ln }}.conf dest=/etc/nginx/sites-enabled/{{ domain_ln }}.conf state=link
 
-- name: Create Web Root
-  when: nginxinstalled|success
+- name: Create Web Roots
+  when: apt|success
   register: webrootcreated
-  file: dest=/var/www/{{ domain }}/public mode=775 state=directory owner=www-data group=www-data
+  file: dest=/var/www/{{ domain_iw }}/public mode=775 state=directory owner=www-data group=www-data
 
-- name: Create nginx Logs
+- name: Create nginx Logdirectory
   when: webrootcreated|success
-  file: dest=/var/www/{{ domain }}/logs mode=755 state=directory owner=www-data group=www-data
+  file: dest=/var/www/{{ domain_iw }}/logs mode=755 state=directory owner=www-data group=www-data
 
 - name: Web root permissions
   when: webrootcreated|success
-  file: dest=/var/www/{{ domain }} mode=775 state=directory owner=www-data group=www-data recurse=yes
+  file: dest=/var/www/{{ domain_iw }} mode=775 state=directory owner=www-data group=www-data recurse=yes
   notify:
     - reload nginx
+
+- name: download and unpack icingaweb2-{{ iw_release }}
+  unarchive: src=https://github.com/Icinga/icingaweb2/archive/v{{ release }}.tar.gz dest=/usr/share/icingaweb2
+
+- name: Create databases
+  when: apt|success
+  register: databases
+  mysql_db: name=librenms state=present login_user=root
+  mysql_db: name=icinga state=present
+  mysql_db: name=icinga_web2 state=present
+
+- name: importing databasescheme
+  when: databases|success
+  register: dbschema
+  

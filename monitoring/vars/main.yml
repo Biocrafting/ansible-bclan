@@ -1,3 +1,4 @@
 ---
-domain: icinga.lan
+domain_iw: icinga.lan
+domain_ln: librenms.lan
 

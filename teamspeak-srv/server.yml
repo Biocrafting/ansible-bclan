@@ -1,4 +1,4 @@
 ---
-- hosts: teamspeak
+- hosts: lxc-00
   roles:
     - teamspeak

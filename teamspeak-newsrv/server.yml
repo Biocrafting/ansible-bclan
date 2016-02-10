@@ -1,0 +1,4 @@
+---
+- hosts: lxc-01
+  roles:
+    - teamspeak-srv
