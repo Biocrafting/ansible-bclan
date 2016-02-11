@@ -1,0 +1,22 @@
+---
+- name: Add icingaweb2 group
+  group: name=icingaweb2 state=present system=yes
+  
+- name: add user www-data to group icingaweb2
+  user: name=www-data groups=icingaweb2 append=yes
+
+- name: Enable icinga 2 command feature
+  shell: icinga2 feature enable command
+  notify: restart icinga2
+
+- name: Enable icinga 2 ido-mysql feature
+  shell: icinga2 feature enable ido-mysql
+
+- name: Create icingaweb2 database
+  when: apt|success
+  register: icingawebdb
+  mysql_db: name=icingaweb2 state=present login_user=root
+
+- name: Create db user icingaweb2
+  when: icingawebdb|success
+  mysql_user: name=icingaweb2 password=bclan2016 priv=icingaweb2.*:ALL state=present

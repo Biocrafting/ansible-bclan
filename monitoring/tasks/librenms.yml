@@ -1,0 +1,34 @@
+---
+- name: Add librenms user
+  user: name=librenms createhome=no system=yes comment="librenms User" home=/opt/librenms
+  register: lnuser
+  
+- name: Create librenms database
+  when: apt|success
+  register: librenmsdb
+  mysql_db: name=librenms state=present login_user=root
+  
+- name: Create db user librenms
+  when: librenmsdb|success
+  mysql_user: name=librenms password=bclan2016 priv=librenms.*:ALL state=present
+  
+- name: Clone the librenms repo
+  when: lnuser|success
+  git: repo=https://github.com/librenms/librenms.git dest=/opt/librenms
+  register: lncheckout
+
+- name: creating rrd directory
+  when: lncheckout|success
+  file: path=/opt/librenms/rrd state=directory
+
+- name: setting owner
+  when: lncheckout|success
+  file: path=/opt/librenms state=directory recurse=yes owner=librenms group=librenms
+
+- name: creating logs directory
+  when: lncheckout|success
+  file: path=/opt/librenms/logs state=directory owner=www-data group=www-data
+
+- name: adding librenms cron
+  when: lncheckout|success
+  template: src=cron-librenms.j2 dest=/etc/cron.d/librenms owner=root group=root
