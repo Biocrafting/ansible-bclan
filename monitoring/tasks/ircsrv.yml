@@ -4,8 +4,9 @@
 
 - name: Enable IRC Server service
   service: name=ngircd enabled=yes
-  notify:
-   - start ngircd
-   
+
 - name: Copy ngircd config files
   copy: src=ngircd/ dest=/etc/ngircd/ owner=root group=root
+  
+- name: Start IRC Server service
+  service: name=ngircd state=started

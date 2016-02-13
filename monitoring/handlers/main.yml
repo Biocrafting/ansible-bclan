@@ -10,9 +10,6 @@
 
 - name: restart icinga2
   service: name=icinga2 state=restarted
-  
-- name: start ngircd
-  service: name=ngircd state=started
 
 - name: start nagircbot
   service: name=nagircbot state=started
