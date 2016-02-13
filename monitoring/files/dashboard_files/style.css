@@ -1,0 +1,14 @@
+body {
+position:absolute; 
+    top:50px;
+    left:10%;
+     //  width:80%;  
+    vertical-align:middle;
+    text-align:center;
+    color:white;
+	background-image:url(metal.jpg);
+	}
+#uff {
+background-color:#ECF6CE;
+border-radius:5px;
+}
