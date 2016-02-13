@@ -50,7 +50,7 @@
 #    - reload nginx
 
 - name: Copy {{ domain_db }} files
-- copy: src=dashboard_files/ dest=/var/www/dashboard.lan/public/ owner=www-data group=www-data
+  copy: src=dashboard_files/ dest=/var/www/dashboard.lan/public/ owner=www-data group=www-data
 
 - name: Add index.html redirect
   when: apt|success
