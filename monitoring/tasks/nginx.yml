@@ -6,17 +6,17 @@
 - name: Add icinga nginx Config
   when: apt|success
   register: icingaconf
-  template: src=nginx-icinga.j2 dest=/etc/nginx/sites-available/{{ domain_iw }}.conf owner=root group=root
+  template: src=nginx-icinga.conf.j2 dest=/etc/nginx/sites-available/{{ domain_iw }}.conf owner=root group=root
 
 - name: Add dashboard nginx Config
   when: apt|success
   register: dashboardconf
-  template: src=nginx-dashboard.j2 dest=/etc/nginx/sites-available/{{ domain_db }}.conf owner=root group=root
+  template: src=nginx-dashboard.conf.j2 dest=/etc/nginx/sites-available/{{ domain_db }}.conf owner=root group=root
 
 - name: Add librenms nginx Config
   when: apt|success
   register: librenmsconf
-  template: src=nginx-librenms.j2 dest=/etc/nginx/sites-available/{{ domain_ln }}.conf owner=root group=root
+  template: src=nginx-librenms.conf.j2 dest=/etc/nginx/sites-available/{{ domain_ln }}.conf owner=root group=root
 
 - name: Enable nginx Icinga web Config
   when: icingaconf|success
