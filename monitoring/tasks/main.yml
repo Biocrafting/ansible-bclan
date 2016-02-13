@@ -1,5 +1,6 @@
 ---
 - include: system.yml
+- include: ircsrv.yml
 - include: nginx.yml
 - include: icinga.yml
 - include: librenms.yml

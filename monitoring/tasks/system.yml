@@ -17,6 +17,7 @@
     - icinga2
     - icinga2-ido-mysql
     - monitoring-plugins
+    - nagios-nrpe-plugin
     - icingaweb2
     - icingaweb2-module-monitoring
     - nginx
@@ -46,6 +47,7 @@
     - gcc
     - make
     - libssl-dev
+    - ngircd
   register: apt
   notify:
     - start nginx

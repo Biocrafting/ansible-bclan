@@ -26,6 +26,10 @@
   when: librenmsconf|success
   file: src=/etc/nginx/sites-available/{{ domain_ln }}.conf dest=/etc/nginx/sites-enabled/{{ domain_ln }}.conf state=link
 
+- name: Enable nginx dashboard Config
+  when: librenmsconf|success
+  file: src=/etc/nginx/sites-available/{{ domain_db }}.conf dest=/etc/nginx/sites-enabled/{{ domain_db }}.conf state=link
+
 - name: Create Dashboard www-root
   when: apt|success
   file: dest=/var/www/{{ domain_db }}/public mode=775 state=directory owner=www-data group=www-data
@@ -52,10 +56,15 @@
 - name: Copy {{ domain_db }} files
   copy: src=dashboard_files/ dest=/var/www/dashboard.lan/public/ owner=www-data group=www-data
 
+- name: Creating dashboard index.php
+  template: src=dashboard-index.php.j2 dest=/var/www/{{ domain_db }}/public/index.php owner=www-data group=www-data
+
 - name: Add index.html redirect
   when: apt|success
   register: librenmsconf
   template: src=index.j2 dest=/var/www/{{ domain_iw }}/public/index.html owner=www-data group=www-data
+  notify:
+    - reload nginx
 
 - name: Edit the php.ini
   when: apt|success
