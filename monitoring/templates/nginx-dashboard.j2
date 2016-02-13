@@ -1,0 +1,18 @@
+server {
+	listen      80;
+	server_name {{ domain_db }};
+	root        /var/www/{{ dashboard_db }}/public;
+	index       index.php;
+	access_log  off;
+	error_log   /var/www/{{ dashboard_db }}/logs/error_log;
+
+	location ~ \.php {
+		include fastcgi.conf;
+		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+		fastcgi_pass unix:/var/run/php5-fpm.sock;
+	}
+	location ~ /\.ht {
+		deny all;
+	}
+}
+

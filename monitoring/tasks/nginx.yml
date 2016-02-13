@@ -6,12 +6,17 @@
 - name: Add icinga nginx Config
   when: apt|success
   register: icingaconf
-  template: src=icinga.j2 dest=/etc/nginx/sites-available/{{ domain_iw }}.conf owner=root group=root
+  template: src=nginx-icinga.j2 dest=/etc/nginx/sites-available/{{ domain_iw }}.conf owner=root group=root
+
+- name: Add dashboard nginx Config
+  when: apt|success
+  register: dashboardconf
+  template: src=nginx-dashboard.j2 dest=/etc/nginx/sites-available/{{ domain_db }}.conf owner=root group=root
 
 - name: Add librenms nginx Config
   when: apt|success
   register: librenmsconf
-  template: src=librenms.j2 dest=/etc/nginx/sites-available/{{ domain_ln }}.conf owner=root group=root
+  template: src=nginx-librenms.j2 dest=/etc/nginx/sites-available/{{ domain_ln }}.conf owner=root group=root
 
 - name: Enable nginx Icinga web Config
   when: icingaconf|success
@@ -21,20 +26,31 @@
   when: librenmsconf|success
   file: src=/etc/nginx/sites-available/{{ domain_ln }}.conf dest=/etc/nginx/sites-enabled/{{ domain_ln }}.conf state=link
 
-- name: Create Web Roots
+- name: Create Dashboard www-root
   when: apt|success
-  register: webrootcreated
+  file: dest=/var/www/{{ domain_db }}/public mode=775 state=directory owner=www-data group=www-data
+  
+- name: Create Dashboard logs-root
+  when: apt|success
+  file: dest=/var/www/{{ domain_db }}/logs mode=775 state=directory owner=www-data group=www-data
+
+- name: Create Icingaweb 2 www-root
+  when: apt|success
+  register: iw_webrootcreated
   file: dest=/var/www/{{ domain_iw }}/public mode=775 state=directory owner=www-data group=www-data
 
-- name: Create icingaweb logdirectory
-  when: webrootcreated|success
+- name: Create Icingaweb 2 logs-root
+  when: iw_webrootcreated|success
   file: dest=/var/www/{{ domain_iw }}/logs mode=755 state=directory owner=www-data group=www-data
 
-- name: Web root permissions
-  when: webrootcreated|success
-  file: dest=/var/www/{{ domain_iw }} mode=775 state=directory owner=www-data group=www-data recurse=yes
-  notify:
-    - reload nginx
+#- name: Icingaweb 2 root permissions
+#  when: iw_webrootcreated|success
+#  file: dest=/var/www/{{ domain_iw }} mode=775 state=directory owner=www-data group=www-data recurse=yes
+#  notify:
+#    - reload nginx
+
+- name: Copy {{ domain_db }} files
+- copy: src=dashboard_files/ dest=/var/www/dashboard.lan/public/ owner=www-data group=www-data
 
 - name: Add index.html redirect
   when: apt|success

@@ -1,0 +1,24 @@
+<!doctype html>
+	<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>BC-LAN Dashboard</title>
+		<link href="style.css" type="text/css" rel="stylesheet">
+		<meta http-equiv="refresh" content="180; URL=http://{{ domain_db }}/">
+	</head>
+	<body>
+		<img src='bclogo.png' alt='BC Logo'/></br>
+		<?php
+			$ctime = time();
+			$btime = time() - (60*60*12);
+			echo "Current Traffic WAN:</br>";
+			echo "<div id='uff'><img src='http://{{ domain_ln }}/graph.php?to=".$ctime."&id=3&type=port_bits&from=".$btime."&legend=yes&height=350&width=1200' alt='Core Switch Traffic' /></br></div>";
+			echo "Current Traffic Core Switch:</br>";
+			echo "<div id='uff'><img src='http://{{ domain_ln }}/graph.php?to=".$ctime."&device=3&type=device_bits&from=".$btime."&legend=no&height=350&width=1200' alt='Core Switch Traffic' /></br></div>";
+			echo "Current Traffic 2nd Switch:</br>";
+			echo "<div id='uff'><img src='http://{{ domain_ln }}/graph.php?to=".$ctime."&device=7&type=device_bits&from=".$btime."&legend=no&height=350&width=1200' alt='2nd Switch Traffic' /></br></div>";
+			echo "Current Traffic Server:</br>";
+			echo "<div id='uff'><img src='http://{{ domain_ln }}/graph.php?to=".$ctime."&id=67&type=port_bits&from=".$btime."&legend=yes&height=350&width=1200' alt='Core Server Traffic' /></br></div>";
+		?> 
+	</body>
+</html>

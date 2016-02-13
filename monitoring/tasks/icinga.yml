@@ -1,4 +1,14 @@
 ---
+- name: Add custom hosts
+  when: apt|success
+  register: librenmsconf
+  template: src=icinga-hosts.conf.j2 dest=/etc/icinga2/conf.d/hosts.conf owner=root group=root
+
+- name: Add custom services
+  when: apt|success
+  register: librenmsconf
+  template: src=icinga-services.conf.j2 dest=/etc/icinga2/conf.d/services.conf owner=root group=root
+
 - name: Add icingaweb2 group
   group: name=icingaweb2 state=present system=yes
   

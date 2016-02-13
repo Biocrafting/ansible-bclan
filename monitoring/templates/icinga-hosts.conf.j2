@@ -1,0 +1,23 @@
+object Host NodeName {
+  import "generic-host"
+  address = "127.0.0.1"
+  address6 = "::1"
+  vars.os = "Linux"
+  vars.http_vhosts["http"] = {
+    http_uri = "/"
+  }
+  vars.disks["disk"] = {
+    /* No parameters. */
+  }
+}
+
+object Host "Google DNS" {
+  import "generic-host"
+  address = "8.8.8.8"
+}
+
+object Host "gateway.lan" {
+  import "generic-host"
+  address = "192.168.23.1"
+  vars.os = "Pfsense"
+}
