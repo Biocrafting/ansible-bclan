@@ -23,7 +23,7 @@
 
 - name: setting owner
   when: lncheckout|success
-  file: path=/opt/librenms state=directory recurse=yes owner=librenms group=librenms
+  file: path=/opt/librenms state=directory recurse=yes owner=librenms group=www-data mode=0775
 
 - name: creating logs directory
   when: lncheckout|success

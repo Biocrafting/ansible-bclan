@@ -42,6 +42,10 @@
     - php-net-ipv6
     - rrdtool
     - git
+    - g++
+    - gcc
+    - make
+    - libssl-dev
   register: apt
   notify:
     - start nginx

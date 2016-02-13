@@ -1,4 +1,6 @@
 ---
 domain_iw: icinga.lan
 domain_ln: librenms.lan
-
+icinga_irc_server: irc.lan:6667
+icinga_irc_channel: #monitoring
+icinga_irc_nick: Bobt
