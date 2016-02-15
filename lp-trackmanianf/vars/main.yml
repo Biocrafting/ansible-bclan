@@ -1,0 +1,20 @@
+---
+user: tmnf
+rcp_localdomain: trackmania.lan
+dedicated_srv_dl_url: http://server.brand/lan_repo/TrackmaniaServer_2011-02-21.zip
+
+#dedicated_srv_dl_url: http://files2.trackmaniaforever.com/TrackmaniaServer_2011-02-21.zip
+rcp_dl_url: http://server.brand/lan_repo/remoteCP_4-0-3-5.zip
+
+#rcp_dl_url: https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/remotecp/remoteCP_4-0-3-5.zip
+
+tmsrv_superadmin_pw: bclan2016
+tmsrv_admin_pw: bclan2016
+tmsrv_user_pw: bclan2016
+tmsrv_srvname: BC-LAN
+tmsrv_srvcomment: Hallo
+tmsrv_srvport: 2354
+tmsrv_p2pport: 3454
+tmsrv_xmlrpcport: 5004
+tmsrv_xmlrpcallow: true
+tmsrv_packmask: stadium

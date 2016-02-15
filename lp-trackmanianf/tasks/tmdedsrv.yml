@@ -1,0 +1,69 @@
+---
+- name: install nginx + php
+  apt: name={{ item }} state=installed update_cache=yes
+  with_items:
+    - mariadb-server
+    - mariadb-client
+    - python-mysqldb
+    - unzip
+    - rsync
+    - ca-certificates
+    - nginx
+    - php5-fpm
+  register: pkginstalled
+
+- name: Add tmnf user
+  user: name={{ user }} createhome=yes comment="Trackmania Server User"
+  register: useradded
+
+- name: Download Trackmania Nations Forever dedicated server
+  when: useradded|success
+  unarchive: src={{ dedicated_srv_dl_url }} dest=/home/{{ user }} copy=no owner={{ user }} group={{ user }}
+
+- name: Create webroot
+  when: pkginstalled|success
+  file: dest=/var/www/{{ rcp_localdomain }}/public mode=775 state=directory owner=www-data group=www-data 
+
+- name: Create logroot
+  when: pkginstalled|success
+  file: dest=/var/www/{{ rcp_localdomain }}/logs mode=775 state=directory owner=www-data group=www-data
+
+- name: Download remotecp 4.0.3.5
+  when: pkginstalled|success
+  unarchive: src={{ rcp_dl_url }} dest=/var/www/{{ rcp_localdomain }}/public copy=no owner=www-data
+  register: rcpdownloaded
+
+- name: Move remotecp
+  when: rcpdownloaded|success
+  command: 'rsync -a --remove-source-files /var/www/{{ rcp_localdomain }}/public/remoteCP_4-0-3-5/ /var/www/{{ rcp_localdomain }}/public/'
+
+- name: Create rcp database
+  when: pkginstalled|success
+  register: rcpdb
+  mysql_db: name=tm_rcp state=present login_user=root
+  
+- name: Create db user tm_rcp
+  when: rcpdb|success
+  mysql_user: name=tm_rcp password=bclan2016 priv=tm_rcp.*:ALL state=present
+
+- name: Create dedicated_cfg.txt
+  template: src=dedicated_cfg.txt.j2 dest=/home/{{ user }}/GameData/Config/dedicated_cfg.txt owner={{ user }} group={{ user }} mode=0770
+
+- name: Create tracklist
+  template: src=tracklist.txt.j2 dest=/home/{{ user }}/GameData/Tracks/MatchSettings/tracklist.txt owner={{ user }} group={{ user }} mode=0770
+
+- name: setting owner back to {{ user }}
+  file: path=/home/{{ user }} state=directory recurse=yes owner={{ user }} group={{ user }} mode=0770
+
+- name: Add tmsrv service
+  template: src=tmsrv.service.j2 dest=/etc/systemd/system/tmsrv.service owner=root group=root
+  register: tmsrvservice
+
+- name: reload systemd
+  command: systemctl daemon-reload
+
+- name: Enable tmsrv service
+  when: tmsrvservice|success
+  service: name=tmsrv enabled=yes
+  notify:
+    - start tmsrv

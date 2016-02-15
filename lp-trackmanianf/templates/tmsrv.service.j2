@@ -1,0 +1,13 @@
+[Unit]
+Description=Trackmania Dedicated Server
+After=network.target
+
+[Service]
+WorkingDirectory=/home/{{ user }}
+User={{ user }}
+ExecStart=/home/{{ user }}/TrackmaniaServer /game_settings=MatchSettings/tracklist.txt /dedicated_cfg=dedicated_cfg.txt /noautoquit /nodaemon /lan
+RestartSec=30
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
