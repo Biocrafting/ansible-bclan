@@ -44,7 +44,7 @@
   
 - name: Create db user tm_rcp
   when: rcpdb|success
-  mysql_user: name=tm_rcp password=bclan2016 priv=tm_rcp.*:ALL state=present
+  mysql_user: name=tm_rcp password="{{ lookup('password', '/tmp/passwordfile chars=digits') }}" priv=tm_rcp.*:ALL state=present
 
 - name: Create dedicated_cfg.txt
   template: src=dedicated_cfg.txt.j2 dest=/home/{{ user }}/GameData/Config/dedicated_cfg.txt owner={{ user }} group={{ user }} mode=0770
