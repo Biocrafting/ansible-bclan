@@ -2,7 +2,7 @@ server {
 	listen      80;
 	server_name {{ rcp_localdomain }};
 	root        /var/www/{{ rcp_localdomain }}/public;
-	index       index.php;
+	index       index.html index.php;
 	access_log  off;
 	error_log   /var/www/{{ rcp_localdomain }}/logs/error_log;
 

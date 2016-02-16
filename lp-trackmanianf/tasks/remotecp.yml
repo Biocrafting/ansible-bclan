@@ -1,0 +1,40 @@
+---
+- name: add www-data to group {{ user }}
+  user: name=www-data groups={{ user }} append=yes
+
+- name: Create webroot
+  when: pkginstalled|success
+  file: dest=/var/www/{{ rcp_localdomain }}/public mode=775 state=directory owner=www-data group=www-data 
+
+- name: Create logroot
+  when: pkginstalled|success
+  file: dest=/var/www/{{ rcp_localdomain }}/logs mode=775 state=directory owner=www-data group=www-data
+
+- name: Download remotecp 4.0.3.5
+  when: pkginstalled|success
+  unarchive: src={{ rcp_dl_url }} dest=/var/www/{{ rcp_localdomain }}/public copy=no owner=www-data
+  register: rcpdownloaded
+
+- name: Move remotecp
+  when: rcpdownloaded|success
+  command: 'mv /var/www/{{ rcp_localdomain }}/public/remoteCP_4-0-3-5/ /var/www/{{ rcp_localdomain }}/public/rcp'
+
+- name: Generate index.html
+  template: src=index.html.j2 dest=/var/www/{{ rcp_localdomain }}/public/index.html owner=www-data group=www-data
+  
+- name: Generate rcp servers.xml
+  template: src=rcp_servers.xml.j2 dest=/var/www/{{ rcp_localdomain }}/public/rcp/xml/servers.xml owner=www-data group=www-data
+
+- name: touch installed file
+  file: path=/var/www/{{ rcp_localdomain }}/public/rcp/cache/installed state=touch owner=www-data group=www-data
+
+- name: Add rcp nginx Config
+  when: rcpdownloaded|success
+  register: ngnxconf
+  template: src=nginx-trackmania_rcp.conf.j2 dest=/etc/nginx/sites-available/{{ rcp_localdomain }}.conf owner=root group=root
+
+- name: Enable nginx Config
+  when: ngnxconf|success
+  file: src=/etc/nginx/sites-available/{{ rcp_localdomain }}.conf dest=/etc/nginx/sites-enabled/{{ rcp_localdomain }}.conf state=link
+  notify:
+  - reload nginx

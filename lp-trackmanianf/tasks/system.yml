@@ -1,0 +1,14 @@
+---
+- name: install nginx + php
+  apt: name={{ item }} state=installed update_cache=yes
+  with_items:
+    - mariadb-server
+    - mariadb-client
+    - python-mysqldb
+    - unzip
+    - rsync
+    - ca-certificates
+    - nginx
+    - php5-fpm
+    - php5-mysql
+  register: pkginstalled
