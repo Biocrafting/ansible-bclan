@@ -1,3 +1,9 @@
 ---
 - name: start tmsrv
   service: name=tmsrv state=started
+
+- name: start nginx
+  service: name=nginx state=started
+
+- name: reload nginx
+  service: name=nginx state=reloaded

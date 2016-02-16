@@ -4,15 +4,15 @@
 	<authorization_levels>
 		<level>
 			<name>SuperAdmin</name>
-			<password>{{ tmsrv_superadmin_pw }}</password>
+			<password>{{ lookup('password', '/tmp/ansible/' + ansible_nodename + '/' + 'tmsrv_superadmin_pw chars=digits') }}</password>
 		</level>
 		<level>
 			<name>Admin</name>
-			<password>{{ tmsrv_admin_pw }}</password>
+			<password>{{ lookup('password', '/tmp/ansible/' + ansible_nodename + '/' + 'tmsrv_admin_pw chars=digits') }}</password>
 		</level>
 		<level>
 			<name>User</name>
-			<password>{{ tmsrv_user_pw }}</password>
+			<password>{{ lookup('password', '/tmp/ansible/' + ansible_nodename + '/' + 'tmsrv_user_pw chars=digits') }}</password>
 		</level>
 	</authorization_levels>
 	

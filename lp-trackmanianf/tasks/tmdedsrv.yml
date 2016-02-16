@@ -10,11 +10,15 @@
     - ca-certificates
     - nginx
     - php5-fpm
+    - php5-mysql
   register: pkginstalled
 
 - name: Add tmnf user
   user: name={{ user }} createhome=yes comment="Trackmania Server User"
   register: useradded
+
+- name: add www-data to group {{ user }}
+  user: name=www-data groups={{ user }} append=yes
 
 - name: Download Trackmania Nations Forever dedicated server
   when: useradded|success
@@ -37,14 +41,22 @@
   when: rcpdownloaded|success
   command: 'rsync -a --remove-source-files /var/www/{{ rcp_localdomain }}/public/remoteCP_4-0-3-5/ /var/www/{{ rcp_localdomain }}/public/'
 
-- name: Create rcp database
-  when: pkginstalled|success
-  register: rcpdb
-  mysql_db: name=tm_rcp state=present login_user=root
-  
-- name: Create db user tm_rcp
-  when: rcpdb|success
-  mysql_user: name=tm_rcp password="{{ lookup('password', '/tmp/passwordfile chars=digits') }}" priv=tm_rcp.*:ALL state=present
+- name: Generate rcp servers.xml
+  template: src=rcp_servers.xml.j2 dest=/var/www/{{ rcp_localdomain }}/public/xml/servers.xml owner=www-data group=www-data
+
+- name: touch installed file
+  file: path=/var/www/{{ rcp_localdomain }}/public/cache/installed state=touch owner=www-data group=www-data
+
+- name: Add rcp nginx Config
+  when: rcpdownloaded|success
+  register: ngnxconf
+  template: src=nginx-trackmania_rcp.conf.j2 dest=/etc/nginx/sites-available/{{ rcp_localdomain }}.conf owner=root group=root
+
+- name: Enable nginx Config
+  when: ngnxconf|success
+  file: src=/etc/nginx/sites-available/{{ rcp_localdomain }}.conf dest=/etc/nginx/sites-enabled/{{ rcp_localdomain }}.conf state=link
+  notify:
+  - reload nginx
 
 - name: Create dedicated_cfg.txt
   template: src=dedicated_cfg.txt.j2 dest=/home/{{ user }}/GameData/Config/dedicated_cfg.txt owner={{ user }} group={{ user }} mode=0770
