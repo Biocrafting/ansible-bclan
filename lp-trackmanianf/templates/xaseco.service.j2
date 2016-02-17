@@ -1,0 +1,13 @@
+[Unit]
+Description=Trackmania Dedicated Server
+After=network.target
+
+[Service]
+WorkingDirectory=/home/{{ user }}/xaseco
+User={{ user }}
+ExecStart=/usr/bin/php /home/{{ user }}/xaseco/aseco.php TMF
+RestartSec=30
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

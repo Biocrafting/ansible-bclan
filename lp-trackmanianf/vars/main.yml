@@ -1,13 +1,13 @@
 ---
 user: tmnf
 rcp_localdomain: trackmania.lan
-dedicated_srv_dl_url: http://server.brand/lan_repo/TrackmaniaServer_2011-02-21.zip
+dedicated_srv_dl_url: http://uffsalot.peacock.uberspace.de/lan_repo/TrackmaniaServer_2011-02-21.zip
 #dedicated_srv_dl_url: http://files2.trackmaniaforever.com/TrackmaniaServer_2011-02-21.zip
 
-rcp_dl_url: http://server.brand/lan_repo/remoteCP_4-0-3-5.zip
+rcp_dl_url: http://uffsalot.peacock.uberspace.de/lan_repo/remoteCP_4-0-3-5.zip
 #rcp_dl_url: https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/remotecp/remoteCP_4-0-3-5.zip
 
-xaseco_dl_url: http://server.brand/lan_repo/xaseco_116.zip
+xaseco_dl_url: http://uffsalot.peacock.uberspace.de/lan_repo/xaseco_116.zip
 #xaseco_dl_url: http://www.gamers.org/tmn/xaseco_116.zip
 
 
@@ -18,3 +18,5 @@ tmsrv_p2pport: 3450
 tmsrv_xmlrpcport: 5004
 tmsrv_xmlrpcallow: true
 tmsrv_packmask: stadium
+
+xaseco_masteradmin: barbossa00

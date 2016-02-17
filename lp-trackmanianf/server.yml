@@ -1,4 +1,4 @@
 ---
-- hosts: srv-lxc-01
+- hosts: lxc-01
   roles:
     - lp-trackmanianf

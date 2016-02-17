@@ -1,6 +1,9 @@
 ---
 - name: add www-data to group {{ user }}
   user: name=www-data groups={{ user }} append=yes
+  notify:
+    - restart nginx
+    - restart php5-fpm
 
 - name: Create webroot
   when: pkginstalled|success
@@ -36,5 +39,3 @@
 - name: Enable nginx Config
   when: ngnxconf|success
   file: src=/etc/nginx/sites-available/{{ rcp_localdomain }}.conf dest=/etc/nginx/sites-enabled/{{ rcp_localdomain }}.conf state=link
-  notify:
-  - reload nginx

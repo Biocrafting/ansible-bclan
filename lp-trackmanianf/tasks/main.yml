@@ -2,6 +2,7 @@
 - include: system.yml
 - include: tmdedsrv.yml
 - include: remotecp.yml
+- include: xaseco.yml
 
 - name: Installation finished 
   debug: msg="Now go to http:/{{ rcp_localdomain }}/rcp and login with admin:admin"

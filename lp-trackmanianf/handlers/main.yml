@@ -5,5 +5,14 @@
 - name: start nginx
   service: name=nginx state=started
 
+- name: restart nginx
+  service: name=nginx state=restarted
+
+- name: restart php5-fpm
+  service: name=php5-fpm state=restarted
+
 - name: reload nginx
   service: name=nginx state=reloaded
+
+- name: start xaseco
+  service: name=xaseco state=started

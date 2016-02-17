@@ -1,0 +1,62 @@
+- name: Create xaseco database
+  when: pkginstalled|success
+  register: xasecodb
+  mysql_db: name=xaseco state=present login_user=root
+  
+- name: Create db user xaseco
+  when: xasecodb|success
+  mysql_user: name=xaseco password="{{ lookup('password', '/tmp/ansible/' + ansible_nodename + '/' + 'mysql_xaseco_pw chars=digits') }}" priv=xaseco.*:ALL state=present
+
+- name: Download xaseco
+  when: useradded|success
+  unarchive: src={{ xaseco_dl_url }} dest=/home/{{ user }} copy=no owner={{ user }} group={{ user }}
+  register: xasecoinstalled
+
+- name: move defaults
+  when: xasecoinstalled|success
+  shell: mv /home/{{ user }}/xaseco/newinstall/*.php /home/{{ user }}/xaseco/includes
+
+- name: copy default configuration files
+  when: xasecoinstalled|success
+  copy: src=xaseco/{{ item }} /home/{{ user }}/xaseco dest=/home/{{ user }}/xaseco/
+  with_items:
+    - access.xml
+    - adminops.xml
+    - autotime.xml
+    - bannedips.xml
+    - dedimania.xml
+    - matchsave.xml
+    - musicserver.xml
+    - plugins.xml
+    - rasp.xml
+  register: xasecoconf
+
+- name: generate config
+  when: xasecoconf|success
+  template: src=xaseco/config.xml.j2 dest=/home/{{ user }}/xaseco/config.xml owner={{ user }} group={{ user }}
+
+- name: generate localdatabase config
+  when: xasecoconf|success
+  template: src=xaseco/localdatabase.xml.j2 dest=/home/{{ user }}/xaseco/localdatabase.xml owner={{ user }} group={{ user }}
+
+- name: install fufi widgets
+  when: xasecoinstalled|success
+  copy: src=xaseco/fufi_widgets/ dest=/home/{{ user }}/xaseco/ owner={{ user }} group={{ user }}
+
+- name: install fufi menu
+  when: xasecoinstalled|success
+  copy: src=xaseco/fufi_menu/ dest=/home/{{ user }}/xaseco/ owner={{ user }} group={{ user }}
+
+- name: generate xaseco service
+  when: xasecoconf|success
+  template: src=xaseco.service.j2 dest=/etc/systemd/system/xaseco.service owner=root group=root
+  register: xasecosvc
+  
+- name: reload systemd
+  command: systemctl daemon-reload
+  
+- name: Enable xaseco service
+  when: xasecosvc
+  service: name=xaseco enabled=yes
+  notify:
+    - start xaseco
