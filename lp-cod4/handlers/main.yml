@@ -1,0 +1,4 @@
+---
+- name: start cod4
+  service: name=cod4 state=started
+

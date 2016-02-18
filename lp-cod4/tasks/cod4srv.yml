@@ -20,3 +20,12 @@
 - name: Add cod4 service
   template: src=cod4.service.j2 dest=/etc/systemd/system/cod4.service owner=root group=root
   register: cod4service
+
+- name: reload systemd
+  command: systemctl daemon-reload
+
+- name: Enable cod4 service
+  when: cod4service|success
+  service: name=cod4 enabled=yes
+  notify:
+    - start cod4
