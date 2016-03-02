@@ -1,0 +1,13 @@
+[Unit]
+Description=KiwiIRC WebIRC
+After=network.target
+
+[Service]
+WorkingDirectory=/home/{{ user }}/KiwiIRC
+User={{ user }}
+ExecStart=/home/{{ user }}/KiwiIRC/kiwi -f
+RestartSec=60
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

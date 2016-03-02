@@ -1,0 +1,4 @@
+---
+- include: system.yml
+- include: kiwiirc.yml
+- include: nginx.yml

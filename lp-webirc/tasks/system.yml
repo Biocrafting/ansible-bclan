@@ -1,0 +1,9 @@
+---
+- name: Install nodejs, npm, git and nginx
+  apt: name={{ item }} state=installed update_cache=yes install_recommends=no
+  with_items:
+    - nodejs-legacy
+    - npm
+    - git
+    - nginx
+  register: apt
