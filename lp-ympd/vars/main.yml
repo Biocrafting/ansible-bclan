@@ -1,0 +1,5 @@
+---
+user: ympd
+mpd_srv_host: server.brand
+mpd_srv_port: 6600
+domain_mpd: 'mpd mpd.lan'

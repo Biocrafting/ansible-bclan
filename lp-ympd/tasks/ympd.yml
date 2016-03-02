@@ -1,0 +1,43 @@
+---
+- name: Add {{ user }} user
+  user: name={{ user }} createhome=yes comment="YMPD User"
+  register: useradded
+
+- name: check if ympd already installed & compiled
+  stat: path=/home/{{ user }}/ympd/build/ympd
+  register: st
+
+- name: Clone the ympd repo
+  when: useradded|success and not st.stat.exists
+  git: repo=https://github.com/notandy/ympd.git dest=/home/{{ user }}/ympd
+  register: gitcheckout
+
+- name: create build directory
+  when: gitcheckout|success
+  file: path=/home/{{ user }}/ympd/build state=directory mode=0750
+
+- name: create makefile
+  shell: cmake ..
+  args:
+    chdir: /home/{{ user }}/ympd/build
+
+- name: build ympd
+  shell: make
+  args:
+    chdir: /home/{{ user }}/ympd/build
+
+- name: setting permissions
+  file: path=/home/{{ user }} state=directory recurse=yes owner={{ user }} group={{ user }} mode=0750
+
+- name: add ympd service
+  template: src=ympd.service.j2 dest=/etc/systemd/system/ympd.service owner=root group=root
+  register: ympdservice
+  notify:
+    - start ympd
+
+- name: reload systemd
+  command: systemctl daemon-reload
+
+- name: Enable ympd service
+  when: ympdservice|success
+  service: name=ympd enabled=yes

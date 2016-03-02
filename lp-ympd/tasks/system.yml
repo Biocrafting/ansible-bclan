@@ -1,0 +1,8 @@
+---
+- name: Install cmake, libmpdclient and nginx
+  apt: name={{ item }} state=installed update_cache=yes install_recommends=no
+  with_items:
+    - cmake
+    - libmpdclient-dev
+    - nginx
+  register: apt
