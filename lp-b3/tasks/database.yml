@@ -1,0 +1,9 @@
+---
+- name: Create xaseco database
+  when: pkginstalled|success
+  register: b3db
+  mysql_db: name=b3 state=present login_user=root
+
+- name: Create db user b3
+  when: b3db|success
+  mysql_user: name=b3 password="{{ lookup('password', '/tmp/ansible/' + ansible_nodename + '/' + 'mysql_b3_pw chars=digits') }}" priv=b3.*:ALL state=present

@@ -1,0 +1,9 @@
+---
+- name: Add user {{ b3.user }}
+  user: name={{ b3.user }} createhome=yes comment="BigBrotherBot User"
+  register: useradded
+
+- name: Download b3 package
+  when: useradded|success
+  unarchive: src={{ b3.download_url }} dest=/home/{{ b3.user }} copy=no owner={{ b3.user }} group={{ b3.user }}
+
