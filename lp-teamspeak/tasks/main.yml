@@ -1,0 +1,31 @@
+---
+- name: Install bzip2
+  apt: pkg=bzip2 state=installed
+
+- name: Add ts3 user
+  action: user name={{ ts.user }} comment="Teamspeak 3 User" shell=/sbin/nologin
+  
+- name: Download and unpack ts3
+  unarchive: src=http://dl.4players.de/ts/releases/{{ ts.release }}/teamspeak3-server_linux_amd64-{{ ts.release }}.tar.bz2 dest=/home/{{ ts.user }} copy=no owner={{ ts.user }}
+  register: ts3pkg
+
+- name: Add ts3 service
+  when: ts3pkg|success
+  register: ts3service
+  template: src=teamspeak3.service.j2 dest=/etc/systemd/system/teamspeak3.service owner=root group=root
+
+- name: reload systemd
+  command: systemctl daemon-reload
+
+- name: Enable ts3 service
+  when: ts3service|success
+  service: name=teamspeak3 enabled=yes
+
+- name: Copy ts3db
+  when: ts3service| success
+  copy:  src=ts3server.sqlitedb dest=/home/{{ ts.user }}/teamspeak3-server_linux_amd64 owner={{ ts.user }} group={{ ts.user }}
+
+- name: Start ts3
+  when: ts3service|success
+  register: ts3started
+  service: name=teamspeak3 state=started

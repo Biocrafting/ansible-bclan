@@ -1,0 +1,4 @@
+---
+- hosts: srv-lxc-00
+  roles:
+    - lp-teamspeak
