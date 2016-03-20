@@ -1,0 +1,26 @@
+---
+- name: Remove Default sources.list
+  file:
+    path: /etc/apt/sources.list
+    state: absent
+  when: ansible_distribution == 'Debian'
+  
+- name:  apt sources.list (Debian-Security)
+  template:
+    src: apt/sources.list.j2
+    dest: /etc/apt/sources.list.d/security.list
+  with_dict: apt.security
+  when: ansible_distribution == 'Debian'
+
+- name: apt sources.list
+  template:
+    src: apt/sources.list.j2
+    dest: "/etc/apt/sources.list.d/{{ item.key }}.list"
+  with_dict: apt.sources
+  when: ansible_distribution == 'Debian'
+
+- name: Global | apt GPG Key
+  apt_key:
+    url: "{{ item.url }}"
+    validate_certs: no
+  with_items: apt.gpg_keys | default([])

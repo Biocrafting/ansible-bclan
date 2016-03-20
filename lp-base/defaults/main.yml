@@ -1,0 +1,15 @@
+---
+apt:
+  sources:
+    lanparty:
+      - suite: lanparty
+        site: pkg.incline.eu
+    stable:
+      - suite: stable contrib
+        site: ftp.de.debian.org/debian
+  security:
+    debian:
+      - suite: stable/updates
+        site: security.debian.org
+  gpg_keys:
+    - url: http://pkg.incline.eu/GPG-KEY-incline
