@@ -1,11 +1,13 @@
+# {{ ansible_managed }}
+
 [Unit]
 Description=Call of Duty 4 dedicated Server
 After=network.target
 
 [Service]
-WorkingDirectory=/home/{{ user }}
-User={{ user }}
-ExecStart=/home/{{ user }}/cod4_lnxded +set net_port {{ port }} +set sv_punkbuster 0 +set sv_pure 1 +exec server.cfg +set fs_homepath /home/{{ user }}/ +map_rotate +set loc_language 2 +set sv_queryIgnoreDebug 1 +set sv_queryIgnoreMegs 1 +set sv_queryIgnoreTime 2 +set sv_queryBounceIgnoreTime 1200
+WorkingDirectory=/home/{{ cod4.user }}
+User={{ cod4.user }}
+ExecStart=/home/{{ cod4.user }}/cod4_lnxded +set net_port {{ cod4.port }} +set sv_punkbuster 0 +set sv_pure 1 +exec server.cfg +set fs_homepath /home/{{ cod4.user }}/ +map_rotate +set loc_language 2 +set sv_queryIgnoreDebug 1 +set sv_queryIgnoreMegs 1 +set sv_queryIgnoreTime 2 +set sv_queryBounceIgnoreTime 1200
 RestartSec=60
 Restart=always
 

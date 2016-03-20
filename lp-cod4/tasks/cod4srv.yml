@@ -1,21 +1,21 @@
 ---
-- name: Add {{ user }} user
-  user: name={{ user }} createhome=yes comment="Call of Duty 4 Server User"
+- name: Add {{ cod4.user }} user
+  user: name={{ cod4.user }} createhome=yes comment="Call of Duty 4 Server User"
   register: useradded
 
 - name: check if server already installed
-  stat: path=/home/{{ user }}/cod4_lnxded
+  stat: path=/home/{{ cod4.user }}/cod4_lnxded
   register: st
 
 - name: Download Call of Duty 4 dedicated server
   when: useradded|success and not st.stat.exists
-  unarchive: src={{ dedicated_srv_dl_url }} dest=/home/{{ user }} copy=no owner={{ user }} group={{ user }}
+  unarchive: src={{ cod4.dedicated_srv_dl_url }} dest=/home/{{ cod4.user }} copy=no owner={{ cod4.user }} group={{ cod4.user }}
 
 - name: Create server.cfg
-  template: src=server.cfg.j2 dest=/home/{{ user }}/main/server.cfg owner={{ user }} group={{ user }} mode=0770
+  template: src=server.cfg.j2 dest=/home/{{ cod4.user }}/main/server.cfg owner={{ cod4.user }} group={{ cod4.user }} mode=0770
 
 - name: setting permissions
-  file: path=/home/{{ user }} state=directory recurse=yes owner={{ user }} group={{ user }} mode=0750
+  file: path=/home/{{ cod4.user }} state=directory recurse=yes owner={{ cod4.user }} group={{ cod4.user }} mode=0750
 
 - name: Add cod4 service
   template: src=cod4.service.j2 dest=/etc/systemd/system/cod4.service owner=root group=root

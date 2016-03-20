@@ -1,21 +1,22 @@
+// {{ ansible_managed }}
 //****************************************************************************** 
 // Call of Duty 4: Modern Warfare - Dedicated Server Config File 
 //****************************************************************************** 
 //================================================================================= 
 // Server Information 
 //================================================================================= 
-sets sv_hostname "{{ sv_hostname }}"
+sets sv_hostname "{{ cod4.sv_hostname }}"
 
-sets _Admin "{{ admin }}" 
-sets _Email "{{ email }}" 
-sets _Website "{{ website }}" 
-sets _Location "{{ location }}" 
-sets _Irc "{{ irc }}" 
+sets _Admin "{{ cod4.admin }}" 
+sets _Email "{{ cod4.email }}" 
+sets _Website "{{ cod4.website }}" 
+sets _Location "{{ cod4.location }}" 
+sets _Irc "{{ cod4.irc }}" 
 sets _Mod "" 
 sets _ModVer "" 
 sets _ModUpdate "" 
 sets _Maps "" 
-set scr_motd "{{ scr_motd }}"
+set scr_motd "{{ cod4.scr_motd }}"
 
 //================================================================================= 
 // General Settings 
@@ -30,7 +31,7 @@ PB_SV_GUIDRelax 4
 
 // Network options 
 set net_ip "{{ ansible_default_ipv4.address }}"      // Set your servers IP address 
-set net_port "{{ port }}"            // Set your port number 
+set net_port "{{ cod4.port }}"            // Set your port number 
 set com_hunkMegs "512" 
 set net_noipx "1"                 // Allow ONLY tcp/ip protocol, player/server communications 
 
@@ -59,7 +60,7 @@ set sv_privatePassword ""       // Private slots, non-public slots
 set g_password ""                //Server password 
 
 // Player slots setup 
-set sv_maxclients "{{ sv_maxclients }}"         // MAX server player slots, this is TOTAL player slots 
+set sv_maxclients "{{ cod4.sv_maxclients }}"         // MAX server player slots, this is TOTAL player slots 
 set sv_privateclients "0"       // Number of private player slots, maxclients - privateclients = public slots 
 
 // Ping 
@@ -125,7 +126,7 @@ set scr_team_teamkillpointloss          0
 set scr_game_spectatetype               1         // (0-2) Disabled, Team/Players Only, Free 
 set scr_game_forceuav                   0 
 set scr_game_hardpoints                 1         // (0-1) i.e. artillery, uav, helicopter 
-set scr_game_friendlyfire		0
+set scr_game_friendlyfire               0
 
 // Hardpoints 
 set scr_hardpoint_allowartillery        0 
