@@ -1,21 +1,21 @@
 ---
-- name: Add {{ user }} user
-  user: name={{ user }} createhome=yes comment="Call of Duty 2 Server User"
+- name: Add {{ cod2.user }} user
+  user: name={{ cod2.user }} createhome=yes comment="Call of Duty 2 Server User"
   register: useradded
 
 - name: check if server already installed
-  stat: path=/home/{{ user }}/cod2_lnxded
+  stat: path=/home/{{ cod2.user }}/cod2_lnxded
   register: st
 
 - name: Download Call of Duty 2 dedicated server
   when: useradded|success and not st.stat.exists
-  unarchive: src={{ dedicated_srv_dl_url }} dest=/home/{{ user }} copy=no owner={{ user }} group={{ user }}
+  unarchive: src={{ cod2.dedicated_srv_dl_url }} dest=/home/{{ cod2.user }} copy=no owner={{ cod2.user }} group={{ cod2.user }}
 
 - name: Create server.cfg
-  template: src=server.cfg.j2 dest=/home/{{ user }}/main/server.cfg owner={{ user }} group={{ user }} mode=0770
+  template: src=server.cfg.j2 dest=/home/{{ cod2.user }}/main/server.cfg owner={{ cod2.user }} group={{ cod2.user }} mode=0770
 
 - name: setting permissions
-  file: path=/home/{{ user }} state=directory recurse=yes owner={{ user }} group={{ user }} mode=0750
+  file: path=/home/{{ cod2.user }} state=directory recurse=yes owner={{ cod2.user }} group={{ cod2.user }} mode=0750
 
 - name: Add cod2 service
   template: src=cod2.service.j2 dest=/etc/systemd/system/cod2.service owner=root group=root

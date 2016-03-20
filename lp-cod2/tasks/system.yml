@@ -1,0 +1,7 @@
+---
+- name: install 32bit libs
+  apt: name={{ item }} state=installed update_cache=yes
+  with_items:
+    - libc6-i386
+  when: ansible_architecture == "x86_64"
+

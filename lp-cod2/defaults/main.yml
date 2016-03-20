@@ -1,0 +1,13 @@
+---
+cod2:
+  user: cod2
+  dedicated_srv_dl_url: http://server.brand/lan_repo/cod2.tar
+  sv_hostname: "^2[BC] ^4 Biocrafting CoD 2 Server"
+  admin: SirUffsALot
+  email: ja@uff
+  website: www.biocrafting.net
+  location: DE
+  irc: irc.lan
+  scr_motd: "^1Uff!"
+  port: 28960
+  sv_maxclients: 48

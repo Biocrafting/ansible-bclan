@@ -1,4 +1,4 @@
 ---
-- name: start cod4
-  service: name=cod4 state=started
+- name: start cod2
+  service: name=cod2 state=started
 
