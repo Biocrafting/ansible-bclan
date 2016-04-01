@@ -2,10 +2,9 @@
 - name: Add kiwiirc nginx Config
   when: kiwiircservice|success
   register: ngnxconf
-  template: src=nginx-irc.lan.conf.j2 dest=/etc/nginx/sites-available/{{ domain_webirc }}.conf owner=root group=root
-  notify:
-    - restart nginx
+  template: src=nginx-irc.lan.conf.j2 dest=/etc/nginx/sites-available/{{ kiwiirc.domain }}.conf owner=root group=root
 
 - name: Enable nginx Config
   when: ngnxconf|success
-  file: src=/etc/nginx/sites-available/{{ domain_webirc }}.conf dest=/etc/nginx/sites-enabled/{{ domain_webirc }}.conf state=link
+  file: src=/etc/nginx/sites-available/{{ kiwiirc.domain }}.conf dest=/etc/nginx/sites-enabled/{{ kiwiirc.domain }}.conf state=link
+  notify: reload nginx

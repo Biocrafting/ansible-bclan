@@ -3,9 +3,9 @@ Description=KiwiIRC WebIRC
 After=network.target
 
 [Service]
-WorkingDirectory=/home/{{ user }}/KiwiIRC
-User={{ user }}
-ExecStart=/home/{{ user }}/KiwiIRC/kiwi -f
+WorkingDirectory=/home/{{ kiwiirc.user }}/KiwiIRC
+User={{ kiwiirc.user }}
+ExecStart=/home/{{ kiwiirc.user }}/KiwiIRC/kiwi -f
 RestartSec=60
 Restart=always
 

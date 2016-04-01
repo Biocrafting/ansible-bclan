@@ -1,38 +1,38 @@
 ---
-- name: Add {{ user }} user
-  user: name={{ user }} createhome=yes comment="WebIRC User"
+- name: Add {{ kiwiirc.user }} user
+  user: name={{ kiwiirc.user }} createhome=yes comment="WebIRC User"
   register: useradded
   
 - name: check if kiwiirc already installed
-  stat: path=/home/{{ user }}/KiwiIRC/kiwi
+  stat: path=/home/{{ kiwiirc.user }}/KiwiIRC/kiwi
   register: st
 
 - name: Clone the kiwiirc repo
   when: useradded|success and not st.stat.exists
-  git: repo=https://github.com/prawnsalad/KiwiIRC.git dest=/home/{{ user }}//KiwiIRC
+  git: repo=https://github.com/prawnsalad/KiwiIRC.git dest=/home/{{ kiwiirc.user }}//KiwiIRC
   register: gitcheckout
   
 - name: installing dependencies
   when: gitcheckout|success
   shell: npm install
   args:
-    chdir: /home/{{user }}/KiwiIRC
+    chdir: /home/{{ kiwiirc.user }}/KiwiIRC
   register: npmdep
 
 - name: Add config.js
   when: npmdep|success
   register: kiwiconf
-  template: src=config.js.j2 dest=/home/{{user }}/KiwiIRC/config.js  owner={{ user }} group={{ user }}
+  template: src=config.js.j2 dest=/home/{{ kiwiirc.user }}/KiwiIRC/config.js  owner={{ kiwiirc.user }} group={{ kiwiirc.user }}
 
 - name: build client code
   when: kiwiconf|success
-  shell: /home/{{ user }}/KiwiIRC/kiwi build
+  shell: /home/{{ kiwiirc.user }}/KiwiIRC/kiwi build
   args:
-    chdir: /home/{{user }}/KiwiIRC
+    chdir: /home/{{ kiwiirc.user }}/KiwiIRC
   register: kiwibuilt
 
 - name: setting permissions
-  file: path=/home/{{ user }} state=directory recurse=yes owner={{ user }} group={{ user }} mode=0750
+  file: path=/home/{{ kiwiirc.user }} state=directory recurse=yes owner={{ kiwiirc.user }} group={{ kiwiirc.user }} mode=0750
 
 - name: Add kiwiirc service
   template: src=kiwiirc.service.j2 dest=/etc/systemd/system/kiwiirc.service owner=root group=root

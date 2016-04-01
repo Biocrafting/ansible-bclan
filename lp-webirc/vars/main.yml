@@ -1,7 +1,0 @@
----
-user: kiwiirc
-domain_webirc: irc.lan
-irc_srv: irc.lan
-irc_srv_port: 6667
-irc_srv_ssl: 'false'
-irc_srv_default_channel: '#lan'
