@@ -1,4 +1,4 @@
 ---
-- hosts: srv-lxc-00
+- hosts: lxc-00
   roles:
     - monitoring

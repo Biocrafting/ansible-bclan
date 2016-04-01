@@ -1,10 +1,10 @@
 server {
 	listen 80;
-	server_name {{ domain_iw }};
-	root /var/www/{{ domain_iw }}/public;
+	server_name {{ icinga.domain }};
+	root /var/www/{{ icinga.domain }}/public;
 	
 	access_log	off;
-	error_log	/var/www/{{ domain_iw }}/logs/error.log;
+	error_log	/var/www/{{ icinga.domain }}/logs/error.log;
 
 
 	location ~ ^/icingaweb2/index\.php(.*)$ {

@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 User=nagios
-ExecStart=/usr/local/bin/nagircbot -d -f /var/cache/icinga2/status.dat -s {{ icinga_irc_server }} -c '{{ icinga_irc_channel }}' -n {{ icinga_irc_nick }}
+ExecStart=/usr/local/bin/nagircbot -d -f /var/cache/icinga2/status.dat -s {{ icinga.irc_server }} -c '{{ icinga.irc_channel }}' -n {{ icinga.irc_nick }}
 RestartSec=30
 Restart=always
 

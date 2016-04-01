@@ -1,12 +1,20 @@
 ---
 - include: system.yml
+
 - include: ircsrv.yml
+  when: install.irc_srv
+  
 - include: nginx.yml
+
 - include: icinga.yml
+
 - include: librenms.yml
 
+- include: nagircbot.yml
+  when: install.irc_bot
+
 - name: Icinga Installation finished 
-  debug: msg="Now generate a token with 'icingacli setup token create' and go at http:/{{ domain_iw }}/icingaweb2/setup to continue the installation"
+  debug: msg="Now generate a token with 'icingacli setup token create' and go at http:/{{ icinga.domain }}/icingaweb2/setup to continue the installation"
 
 - name: LibreNMS Installation finished 
-  debug: msg="Now go to http:/{{ domain_ln }} to continue the installation"
+  debug: msg="Now go to http:/{{ librenms.domain }} to continue the installation"

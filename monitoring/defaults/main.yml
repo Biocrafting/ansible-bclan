@@ -1,0 +1,13 @@
+---
+install:
+  irc_srv: true
+  irc_bot: true
+icinga:
+  domain: icinga.lan
+  irc_server: irc.lan:6667
+  irc_channel: '#monitoring'
+  irc_nick: Bobt
+librenms:
+  domain: librenms.lan
+dashboard:
+  domain: dashboard.lan

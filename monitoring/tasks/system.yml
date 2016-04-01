@@ -8,7 +8,7 @@
   apt_key: url=http://debmon.org/debmon/repo.key state=present
   register: aptrepokey
 
-- name: Install icinga2,icingaweb2,nginx,php5-fpm,mariadb + dep
+- name: Install icinga2,icingaweb2, mariadb + dep
   when: aptrepokey|success
   apt: name={{ item }} state=installed update_cache=yes install_recommends=no
   with_items:
@@ -21,27 +21,15 @@
     - icingaweb2
     - icingaweb2-module-monitoring
     - icingacli
-    - nginx
-    - php5-fpm
     - mariadb-server
     - mariadb-client
     - python-mysqldb
-    - php5-cli
-    - php5-mysql
-    - php5-gd
-    - php5-snmp
-    - php-pear
-    - php5-curl
     - snmp
     - graphviz
-    - php5-mcrypt
-    - php5-json
     - fping
     - imagemagick
     - whois
     - nmap
-    - php-net-ipv4
-    - php-net-ipv6
     - rrdtool
     - git
     - g++

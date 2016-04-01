@@ -1,0 +1,3 @@
+---
+dependencies:
+  - { role: lp-nginx, nginx.php5: true }

@@ -1,10 +1,10 @@
 server {
 	listen      80;
-	server_name {{ domain_db }};
-	root        /var/www/{{ domain_db }}/public;
+	server_name {{ dashboard.domain }};
+	root        /var/www/{{ dashboard.domain }}/public;
 	index       index.php;
 	access_log  off;
-	error_log   /var/www/{{ domain_db }}/logs/error_log;
+	error_log   /var/www/{{ dashboard.domain }}/logs/error_log;
 
 	location ~ \.php {
 		include fastcgi.conf;

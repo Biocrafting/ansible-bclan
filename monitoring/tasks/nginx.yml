@@ -6,63 +6,63 @@
 - name: Add icinga nginx Config
   when: apt|success
   register: icingaconf
-  template: src=nginx-icinga.conf.j2 dest=/etc/nginx/sites-available/{{ domain_iw }}.conf owner=root group=root
+  template: src=nginx-icinga.conf.j2 dest=/etc/nginx/sites-available/{{ icinga.domain }}.conf owner=root group=root
 
 - name: Add dashboard nginx Config
   when: apt|success
   register: dashboardconf
-  template: src=nginx-dashboard.conf.j2 dest=/etc/nginx/sites-available/{{ domain_db }}.conf owner=root group=root
+  template: src=nginx-dashboard.conf.j2 dest=/etc/nginx/sites-available/{{ dashboard.domain }}.conf owner=root group=root
 
 - name: Add librenms nginx Config
   when: apt|success
   register: librenmsconf
-  template: src=nginx-librenms.conf.j2 dest=/etc/nginx/sites-available/{{ domain_ln }}.conf owner=root group=root
+  template: src=nginx-librenms.conf.j2 dest=/etc/nginx/sites-available/{{ librenms.domain }}.conf owner=root group=root
 
 - name: Enable nginx Icinga web Config
   when: icingaconf|success
-  file: src=/etc/nginx/sites-available/{{ domain_iw }}.conf dest=/etc/nginx/sites-enabled/{{ domain_iw }}.conf state=link
+  file: src=/etc/nginx/sites-available/{{ icinga.domain }}.conf dest=/etc/nginx/sites-enabled/{{ icinga.domain }}.conf state=link
 
 - name: Enable nginx librenms Config
   when: librenmsconf|success
-  file: src=/etc/nginx/sites-available/{{ domain_ln }}.conf dest=/etc/nginx/sites-enabled/{{ domain_ln }}.conf state=link
+  file: src=/etc/nginx/sites-available/{{ librenms.domain }}.conf dest=/etc/nginx/sites-enabled/{{ librenms.domain }}.conf state=link
 
 - name: Enable nginx dashboard Config
   when: librenmsconf|success
-  file: src=/etc/nginx/sites-available/{{ domain_db }}.conf dest=/etc/nginx/sites-enabled/{{ domain_db }}.conf state=link
+  file: src=/etc/nginx/sites-available/{{ dashboard.domain }}.conf dest=/etc/nginx/sites-enabled/{{ dashboard.domain }}.conf state=link
 
 - name: Create Dashboard www-root
   when: apt|success
-  file: dest=/var/www/{{ domain_db }}/public mode=775 state=directory owner=www-data group=www-data
+  file: dest=/var/www/{{ dashboard.domain }}/public mode=775 state=directory owner=www-data group=www-data
   
 - name: Create Dashboard logs-root
   when: apt|success
-  file: dest=/var/www/{{ domain_db }}/logs mode=775 state=directory owner=www-data group=www-data
+  file: dest=/var/www/{{ dashboard.domain }}/logs mode=775 state=directory owner=www-data group=www-data
 
 - name: Create Icingaweb 2 www-root
   when: apt|success
   register: iw_webrootcreated
-  file: dest=/var/www/{{ domain_iw }}/public mode=775 state=directory owner=www-data group=www-data
+  file: dest=/var/www/{{ icinga.domain }}/public mode=775 state=directory owner=www-data group=www-data
 
 - name: Create Icingaweb 2 logs-root
   when: iw_webrootcreated|success
-  file: dest=/var/www/{{ domain_iw }}/logs mode=755 state=directory owner=www-data group=www-data
+  file: dest=/var/www/{{ icinga.domain }}/logs mode=755 state=directory owner=www-data group=www-data
 
 #- name: Icingaweb 2 root permissions
 #  when: iw_webrootcreated|success
-#  file: dest=/var/www/{{ domain_iw }} mode=775 state=directory owner=www-data group=www-data recurse=yes
+#  file: dest=/var/www/{{ icinga.domain }} mode=775 state=directory owner=www-data group=www-data recurse=yes
 #  notify:
 #    - reload nginx
 
-- name: Copy {{ domain_db }} files
+- name: Copy {{ dashboard.domain }} files
   copy: src=dashboard_files/ dest=/var/www/dashboard.lan/public/ owner=www-data group=www-data
 
 - name: Creating dashboard index.php
-  template: src=dashboard-index.php.j2 dest=/var/www/{{ domain_db }}/public/index.php owner=www-data group=www-data
+  template: src=dashboard-index.php.j2 dest=/var/www/{{ dashboard.domain }}/public/index.php owner=www-data group=www-data
 
 - name: Add index.html redirect
   when: apt|success
   register: librenmsconf
-  template: src=index.j2 dest=/var/www/{{ domain_iw }}/public/index.html owner=www-data group=www-data
+  template: src=index.j2 dest=/var/www/{{ icinga.domain }}/public/index.html owner=www-data group=www-data
   notify:
     - reload nginx
 

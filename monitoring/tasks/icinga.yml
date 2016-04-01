@@ -33,33 +33,6 @@
 - name: Create db user icingaweb2
   when: icingawebdb|success
   mysql_user: name=icingaweb2 password=bclan2016 priv=icingaweb2.*:ALL state=present
-
-- name: Download nagircbot
-  unarchive: src=https://www.vanheusden.com/nagircbot/nagircbot-0.0.33.tgz dest=/usr/src copy=no owner=nagios
-
-- name: compile nagircbot
-  shell: make
-  register: nibcompiled
-  args:
-    chdir: /usr/src/nagircbot-0.0.33
-
-- name: install nagircbot
-  when: nibcompiled|success
-  register: nibinstalled
-  shell: make install
-  args:
-    chdir: /usr/src/nagircbot-0.0.33
-
-- name: Add IRC Bot service
-  when: nibinstalled|success
-  register: nibservice
-  template: src=nagircbot.service.j2 dest=/etc/systemd/system/nagircbot.service owner=root group=root
-
-- name: reload systemd
-  command: systemctl daemon-reload
-
-- name: Enable IRC Bot service
-  when: nibservice|success
-  service: name=nagircbot enabled=yes
-  notify:
-   - start nagircbot
+  
+- name: setting owner
+  file: path=/etc/icingaweb2/modules state=directory recurse=yes owner=www-data group=icingaweb2 mode=0775
