@@ -1,0 +1,4 @@
+---
+nginx:
+  disable_default: false
+  php5: false

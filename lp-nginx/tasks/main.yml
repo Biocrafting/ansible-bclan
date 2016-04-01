@@ -1,0 +1,59 @@
+---
+- name: Stop and disable Apache
+  service:
+    name: apache2
+    state: stopped
+    enabled: false
+  ignore_errors: true
+  
+- name: Install nginx
+  apt:
+    name: nginx
+  tags: [ 'packages' ]
+
+- name: Install php5-fpm
+  when: nginx.php5
+  apt: name={{ item }} state=installed update_cache=yes install_recommends=no
+  with_items:
+    - php5-fpm
+    - php5-cli
+    - php5-mysql
+    - php5-gd
+    - php5-snmp
+    - php-pear
+    - php5-curl
+    - php5-mcrypt
+    - php5-json
+    - php-net-ipv4
+    - php-net-ipv6
+  tags: [ 'packages' ]
+
+- name: Create config directories
+  file:
+    state: directory
+    path: /etc/nginx/{{ item }}
+  with_items:
+    - conf.d
+    - sites-enabled
+    - sites-available
+
+- name: Disable default site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: reload nginx
+  when: nginx.disable_default
+
+- name: Enable Service
+  service:
+    name: nginx
+    enabled: true
+  tags: [ 'services' ]
+
+- name: Start Service
+  service:
+    name: nginx
+    state: started
+    enabled: true
+  when: start_nginx | default(true)
+  tags: [ 'services' ]
