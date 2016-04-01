@@ -20,6 +20,7 @@
     - nagios-nrpe-plugin
     - icingaweb2
     - icingaweb2-module-monitoring
+    - icingacli
     - nginx
     - php5-fpm
     - mariadb-server
