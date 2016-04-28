@@ -1,5 +1,7 @@
 ---
 apt:
+  apt_cache_url: 192.168.23.10
+  apt_cache_port: 3142
   sources:
     lanparty:
       - suite: lanparty

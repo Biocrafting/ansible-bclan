@@ -1,0 +1,7 @@
+# {{ ansible_managed }}
+
+{% if apt.apt_cache_url is defined %}
+Acquire::http { Proxy "http://{{ apt.apt_cache_url }}:{{ apt.apt_cache_port }}"; };
+{% else %}
+# `apt.apt_cache_url` not defined, cache proxy disabled
+{% endif %}
